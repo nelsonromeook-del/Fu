@@ -21,24 +21,3 @@ function createLoginTracker(userInfo) {
         }
     };
 }
-
-const loginTracker = createLoginTracker({
-    username: "user1",
-    password: "password123"
-});
-
-// Handle Login Button Action
-function handleLogin() {
-    const enteredUser = document.getElementById("username").value;
-    const enteredPass = document.getElementById("password").value;
-    const msgBox = document.getElementById("message");
-
-    if (enteredUser !== "user1") {
-        msgBox.textContent = "Username not recognized.";
-        return;
-    }
-
-    // Pass password to login tracker
-    const result = loginTracker(enteredPass);
-    msgBox.textContent = result;
-}
