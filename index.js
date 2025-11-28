@@ -1,43 +1,28 @@
+function createLoginTracker(correctUser, correctPass) {
+    let attempts = 0;  
 
-// LOGIN FEATURE USING CLOSURES + NESTED FUNCTIONS + ARROW FUNCTIONS
-function createLoginTracker() {
+    // The returned function (closure)
+    return (username, password) => {
 
-    const correctUser = "admin";
-    const correctPass = "12345";
-    let attempts = 3;  // outer variable protected by closure
-
-    const login = (username, password) => {   // arrow function
-        if (attempts <= 0) {
-            showToast("Account locked. No attempts left.");
-            return;
-        }
-
+        // Allow login if credentials are correct
         if (username === correctUser && password === correctPass) {
-            showToast("Login Successful!");
-        } else {
-            attempts--;
-            if ((attempts) > 0 && (attempts <= 3)) {
-                showToast(` Wrong credentials. Attempts left: ${attempts}`);
-            } else  {
-                showToast(" Account locked. Contact support.");
-            }
+            console.log(" Login successful!");
+            attempts = 0; // Reset attempts after correct login
+            return true;
         }
+
+        // If incorrect, increase attempts
+        attempts++;
+
+        // If attempts reached 3 → lock account
+        if (attempts >= 3) {
+            console.log(" Account locked. Too many failed attempts.");
+            return false;
+        }
+
+        // Otherwise show remaining attempts
+        console.log(`Wrong login. Attempts left: ${3 - attempts}`);
+        return false;
     };
-
-    // call inner function with user input
-    login(
-        document.getElementById("username").value,
-        document.getElementById("password").value
-    );
 }
-
-//  TOAST POPUP FUNCTION  
-function showToast(message) {
-    const toast = document.getElementById("toast");
-    toast.innerText = message;
-    toast.className = "show";
-
-    setTimeout(() => {
-        toast.className = toast.className.replace("show", "");
-    }, 3000);
-}
+createLoginTracker();
