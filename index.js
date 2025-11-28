@@ -1,28 +1,44 @@
-function createLoginTracker(correctUser, correctPass) {
-    let attempts = 0;  
+// Outer function – initializes login feature
+function createLoginTracker(userInfo) {
 
-    // The returned function (closure)
-    return (username, password) => {
+    let attemptCount = 0; // tracks wrong login attempts
 
-        // Allow login if credentials are correct
-        if (username === correctUser && password === correctPass) {
-            console.log(" Login successful!");
-            attempts = 0; // Reset attempts after correct login
-            return true;
+    // Inner arrow function — handles each login attempt
+    return (passwordAttempt) => {
+
+        // If already locked
+        if (attemptCount >= 3) {
+            return "Account locked due to too many failed login attempts";
         }
 
-        // If incorrect, increase attempts
-        attempts++;
+        attemptCount++; // increase attempt count each try
 
-        // If attempts reached 3 → lock account
-        if (attempts >= 3) {
-            console.log(" Account locked. Too many failed attempts.");
-            return false;
+        // Check password match
+        if (passwordAttempt === userInfo.password) {
+            return "Login successful";
+        } else {
+            return `Attempt ${attemptCount}: Login failed`;
         }
-
-        // Otherwise show remaining attempts
-        console.log(`Wrong login. Attempts left: ${3 - attempts}`);
-        return false;
     };
 }
-createLoginTracker();
+
+const loginTracker = createLoginTracker({
+    username: "user1",
+    password: "password123"
+});
+
+// Handle Login Button Action
+function handleLogin() {
+    const enteredUser = document.getElementById("username").value;
+    const enteredPass = document.getElementById("password").value;
+    const msgBox = document.getElementById("message");
+
+    if (enteredUser !== "user1") {
+        msgBox.textContent = "Username not recognized.";
+        return;
+    }
+
+    // Pass password to login tracker
+    const result = loginTracker(enteredPass);
+    msgBox.textContent = result;
+}
